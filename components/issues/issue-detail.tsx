@@ -1,27 +1,45 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
-import { ArrowLeft, AlertCircle, CheckCircle, Clock, Brain, MessageSquare, Tag, User, Calendar, ExternalLink, Edit, MoreHorizontal, ThumbsUp, ThumbsDown, Heart, Laugh, GitBranch } from 'lucide-react'
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import {
+  ArrowLeft,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Brain,
+  MessageSquare,
+  Tag,
+  User,
+  Calendar,
+  ExternalLink,
+  Edit,
+  MoreHorizontal,
+  ThumbsUp,
+  ThumbsDown,
+  Heart,
+  Laugh,
+  GitBranch,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import Link from 'next/link'
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 // Mock data for the issue detail
 const issueData = {
   id: 1,
-  title: 'Memory leak in data processing pipeline causing application crashes',
+  title: "Memory leak in data processing pipeline causing application crashes",
   description: `## Bug Description
 The application consumes increasing amounts of memory during large data processing tasks, eventually leading to crashes after processing 10GB+ datasets.
 
@@ -45,106 +63,122 @@ Memory usage continuously increases, leading to out-of-memory errors and applica
 
 ## Additional Context
 This issue started appearing after the recent update to the batch processing logic in v2.1.0.`,
-  author: 'Bob Wilson',
-  avatar: '/placeholder.svg?height=40&width=40',
-  assignee: 'Alice Johnson',
-  assigneeAvatar: '/placeholder.svg?height=32&width=32',
-  repository: 'ml-pipeline',
-  status: 'open',
-  priority: 'critical',
-  labels: ['bug', 'performance', 'memory', 'urgent'],
-  createdAt: '2024-01-15T10:30:00Z',
-  updatedAt: '2024-01-15T14:45:00Z',
+  author: "Bob Wilson",
+  avatar: "/placeholder.svg?height=40&width=40",
+  assignee: "Alice Johnson",
+  assigneeAvatar: "/placeholder.svg?height=32&width=32",
+  repository: "ml-pipeline",
+  status: "open",
+  priority: "critical",
+  labels: ["bug", "performance", "memory", "urgent"],
+  createdAt: "2024-01-15T10:30:00Z",
+  updatedAt: "2024-01-15T14:45:00Z",
   comments: 8,
   reactions: { thumbsUp: 3, thumbsDown: 0, heart: 2, laugh: 0 },
   progress: 25,
   aiAnalysis: {
-    category: 'Performance Issue',
+    category: "Performance Issue",
     confidence: 95,
-    suggestedLabels: ['memory-leak', 'performance', 'critical'],
-    estimatedEffort: '3-5 days',
+    suggestedLabels: ["memory-leak", "performance", "critical"],
+    estimatedEffort: "3-5 days",
     relatedIssues: [15, 23],
     suggestions: [
-      'Check for unclosed database connections in the data processing loop',
-      'Review memory allocation patterns in the batch processing functions',
-      'Consider implementing memory pooling for large dataset operations',
-      'Add memory usage monitoring and alerts'
-    ]
-  }
-}
+      "Check for unclosed database connections in the data processing loop",
+      "Review memory allocation patterns in the batch processing functions",
+      "Consider implementing memory pooling for large dataset operations",
+      "Add memory usage monitoring and alerts",
+    ],
+  },
+};
 
 const comments = [
   {
     id: 1,
-    author: 'Alice Johnson',
-    avatar: '/placeholder.svg?height=32&width=32',
-    content: 'I can reproduce this issue. Looking into the memory allocation patterns in the batch processing code.',
-    createdAt: '2024-01-15T11:00:00Z',
-    reactions: { thumbsUp: 2, heart: 1 }
+    author: "Alice Johnson",
+    avatar: "/placeholder.svg?height=32&width=32",
+    content:
+      "I can reproduce this issue. Looking into the memory allocation patterns in the batch processing code.",
+    createdAt: "2024-01-15T11:00:00Z",
+    reactions: { thumbsUp: 2, heart: 1 },
   },
   {
     id: 2,
-    author: 'Charlie Brown',
-    avatar: '/placeholder.svg?height=32&width=32',
-    content: 'I noticed similar behavior in our staging environment. The memory usage spikes around the 8GB mark.',
-    createdAt: '2024-01-15T12:15:00Z',
-    reactions: { thumbsUp: 1 }
+    author: "Charlie Brown",
+    avatar: "/placeholder.svg?height=32&width=32",
+    content:
+      "I noticed similar behavior in our staging environment. The memory usage spikes around the 8GB mark.",
+    createdAt: "2024-01-15T12:15:00Z",
+    reactions: { thumbsUp: 1 },
   },
   {
     id: 3,
-    author: 'Alice Johnson',
-    avatar: '/placeholder.svg?height=32&width=32',
-    content: 'Found the issue! The database connections are not being properly closed in the error handling path. Working on a fix.',
-    createdAt: '2024-01-15T14:30:00Z',
-    reactions: { thumbsUp: 4, heart: 2 }
-  }
-]
+    author: "Alice Johnson",
+    avatar: "/placeholder.svg?height=32&width=32",
+    content:
+      "Found the issue! The database connections are not being properly closed in the error handling path. Working on a fix.",
+    createdAt: "2024-01-15T14:30:00Z",
+    reactions: { thumbsUp: 4, heart: 2 },
+  },
+];
 
 interface IssueDetailProps {
-  issueId: string
+  issueId: string;
 }
 
 export function IssueDetail({ issueId }: IssueDetailProps) {
-  const [newComment, setNewComment] = useState('')
-  const [showAIAnalysis, setShowAIAnalysis] = useState(true)
+  const [newComment, setNewComment] = useState("");
+  const [showAIAnalysis, setShowAIAnalysis] = useState(true);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-      case 'in_progress': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-      case 'closed': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+      case "open":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
+      case "in_progress":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+      case "closed":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
     }
-  }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'critical': return 'bg-red-500'
-      case 'high': return 'bg-orange-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'low': return 'bg-green-500'
-      default: return 'bg-gray-500'
+      case "critical":
+        return "bg-red-500";
+      case "high":
+        return "bg-orange-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "low":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'open': return <AlertCircle className="h-4 w-4" />
-      case 'in_progress': return <Clock className="h-4 w-4" />
-      case 'closed': return <CheckCircle className="h-4 w-4" />
-      default: return <AlertCircle className="h-4 w-4" />
+      case "open":
+        return <AlertCircle className="h-4 w-4" />;
+      case "in_progress":
+        return <Clock className="h-4 w-4" />;
+      case "closed":
+        return <CheckCircle className="h-4 w-4" />;
+      default:
+        return <AlertCircle className="h-4 w-4" />;
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -160,14 +194,22 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
           <div className="flex items-center space-x-2">
             <Badge className={getStatusColor(issueData.status)}>
               {getStatusIcon(issueData.status)}
-              <span className="ml-1 capitalize">{issueData.status.replace('_', ' ')}</span>
+              <span className="ml-1 capitalize">
+                {issueData.status.replace("_", " ")}
+              </span>
             </Badge>
-            <div className={`w-3 h-3 rounded-full ${getPriorityColor(issueData.priority)}`} />
+            <div
+              className={`w-3 h-3 rounded-full ${getPriorityColor(
+                issueData.priority
+              )}`}
+            />
             <Badge variant="outline">{issueData.repository}</Badge>
-            <span className="text-sm text-muted-foreground">#{issueData.id}</span>
+            <span className="text-sm text-muted-foreground">
+              #{issueData.id}
+            </span>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">
             <Edit className="mr-2 h-4 w-4" />
@@ -210,13 +252,21 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
           {/* Issue Details */}
           <Card className="animate-slide-up animation-delay-200">
             <CardHeader>
-              <CardTitle className="text-2xl leading-tight">{issueData.title}</CardTitle>
+              <CardTitle className="text-2xl leading-tight">
+                {issueData.title}
+              </CardTitle>
               <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-2">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={issueData.avatar || "/placeholder.svg"} alt={issueData.author} />
+                    <AvatarImage
+                      src={issueData.avatar || "/placeholder.svg"}
+                      alt={issueData.author}
+                    />
                     <AvatarFallback className="text-xs">
-                      {issueData.author.split(' ').map(n => n[0]).join('')}
+                      {issueData.author
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <span>{issueData.author}</span>
@@ -234,7 +284,7 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                   {issueData.description}
                 </pre>
               </div>
-              
+
               {/* Reactions */}
               <div className="flex items-center space-x-2 pt-4 border-t">
                 <Button variant="ghost" size="sm" className="h-8">
@@ -265,8 +315,8 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                       {issueData.aiAnalysis.confidence}% confidence
                     </Badge>
                   </CardTitle>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     onClick={() => setShowAIAnalysis(false)}
                   >
@@ -278,36 +328,48 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm font-medium mb-1">Category</p>
-                    <Badge variant="secondary">{issueData.aiAnalysis.category}</Badge>
+                    <Badge variant="secondary">
+                      {issueData.aiAnalysis.category}
+                    </Badge>
                   </div>
                   <div>
                     <p className="text-sm font-medium mb-1">Estimated Effort</p>
-                    <Badge variant="outline">{issueData.aiAnalysis.estimatedEffort}</Badge>
+                    <Badge variant="outline">
+                      {issueData.aiAnalysis.estimatedEffort}
+                    </Badge>
                   </div>
                 </div>
-                
+
                 <div>
                   <p className="text-sm font-medium mb-2">AI Suggestions</p>
                   <ul className="space-y-2">
                     {issueData.aiAnalysis.suggestions.map((suggestion, i) => (
-                      <li key={i} className="text-sm bg-muted/50 p-3 rounded-lg">
+                      <li
+                        key={i}
+                        className="text-sm bg-muted/50 p-3 rounded-lg"
+                      >
                         {suggestion}
                       </li>
                     ))}
                   </ul>
                 </div>
-                
+
                 {issueData.aiAnalysis.relatedIssues.length > 0 && (
                   <div>
                     <p className="text-sm font-medium mb-2">Related Issues</p>
                     <div className="flex space-x-2">
-                      {issueData.aiAnalysis.relatedIssues.map((relatedId, i) => (
-                        <Link key={i} href={`/dashboard/issues/${relatedId}`}>
-                          <Badge variant="outline" className="hover:bg-primary hover:text-primary-foreground cursor-pointer">
-                            #{relatedId}
-                          </Badge>
-                        </Link>
-                      ))}
+                      {issueData.aiAnalysis.relatedIssues.map(
+                        (relatedId, i) => (
+                          <Link key={i} href={`/dashboard/issues/${relatedId}`}>
+                            <Badge
+                              variant="outline"
+                              className="hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                            >
+                              #{relatedId}
+                            </Badge>
+                          </Link>
+                        )
+                      )}
                     </div>
                   </div>
                 )}
@@ -328,14 +390,22 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                 <div key={comment.id} className="space-y-3">
                   <div className="flex items-start space-x-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={comment.avatar || "/placeholder.svg"} alt={comment.author} />
+                      <AvatarImage
+                        src={comment.avatar || "/placeholder.svg"}
+                        alt={comment.author}
+                      />
                       <AvatarFallback className="text-xs">
-                        {comment.author.split(' ').map(n => n[0]).join('')}
+                        {comment.author
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center space-x-2">
-                        <span className="font-medium text-sm">{comment.author}</span>
+                        <span className="font-medium text-sm">
+                          {comment.author}
+                        </span>
                         <span className="text-xs text-muted-foreground">
                           {formatDate(comment.createdAt)}
                         </span>
@@ -344,11 +414,19 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                         {comment.content}
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button variant="ghost" size="sm" className="h-6 text-xs">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs"
+                        >
                           <ThumbsUp className="mr-1 h-3 w-3" />
                           {comment.reactions.thumbsUp}
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-6 text-xs">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs"
+                        >
                           <Heart className="mr-1 h-3 w-3" />
                           {comment.reactions.heart}
                         </Button>
@@ -358,12 +436,15 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                   {index < comments.length - 1 && <Separator />}
                 </div>
               ))}
-              
+
               {/* Add Comment */}
               <div className="space-y-3 pt-4 border-t">
                 <div className="flex items-start space-x-3">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" alt="You" />
+                    <AvatarImage
+                      src="/placeholder.svg?height=32&width=32"
+                      alt="You"
+                    />
                     <AvatarFallback className="text-xs">JD</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-2">
@@ -400,20 +481,26 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                 {issueData.assignee ? (
                   <div className="flex items-center space-x-2">
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={issueData.assigneeAvatar || "/placeholder.svg"} alt={issueData.assignee} />
+                      <AvatarImage
+                        src={issueData.assigneeAvatar || "/placeholder.svg"}
+                        alt={issueData.assignee}
+                      />
                       <AvatarFallback className="text-xs">
-                        {issueData.assignee.split(' ').map(n
-                      <AvatarFallback className="text-xs">
-                        {issueData.assignee.split(' ').map(n => n[0]).join('')}
+                        {issueData.assignee
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm">{issueData.assignee}</span>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No one assigned</p>
+                  <p className="text-sm text-muted-foreground">
+                    No one assigned
+                  </p>
                 )}
               </div>
-              
+
               <div>
                 <p className="text-sm font-medium mb-2">Labels</p>
                 <div className="flex flex-wrap gap-1">
@@ -425,21 +512,29 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <p className="text-sm font-medium mb-2">Priority</p>
                 <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${getPriorityColor(issueData.priority)}`} />
-                  <span className="text-sm capitalize">{issueData.priority}</span>
+                  <div
+                    className={`w-3 h-3 rounded-full ${getPriorityColor(
+                      issueData.priority
+                    )}`}
+                  />
+                  <span className="text-sm capitalize">
+                    {issueData.priority}
+                  </span>
                 </div>
               </div>
-              
-              {issueData.status === 'in_progress' && (
+
+              {issueData.status === "in_progress" && (
                 <div>
                   <p className="text-sm font-medium mb-2">Progress</p>
                   <div className="space-y-1">
                     <Progress value={issueData.progress} className="h-2" />
-                    <p className="text-xs text-muted-foreground">{issueData.progress}% complete</p>
+                    <p className="text-xs text-muted-foreground">
+                      {issueData.progress}% complete
+                    </p>
                   </div>
                 </div>
               )}
@@ -456,13 +551,17 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
                 <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
                 <div className="flex-1">
                   <p className="text-sm font-medium">Issue created</p>
-                  <p className="text-xs text-muted-foreground">{formatDate(issueData.createdAt)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDate(issueData.createdAt)}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Assigned to {issueData.assignee}</p>
+                  <p className="text-sm font-medium">
+                    Assigned to {issueData.assignee}
+                  </p>
                   <p className="text-xs text-muted-foreground">2 hours ago</p>
                 </div>
               </div>
@@ -478,5 +577,5 @@ export function IssueDetail({ issueId }: IssueDetailProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

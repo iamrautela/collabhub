@@ -1,3 +1,17 @@
 {
+  "/api/auth/github/callback/route": "app/api/auth/github/callback/route.js",
+  "/api/ai/suggestions/route": "app/api/ai/suggestions/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/pull-requests/route": "app/api/pull-requests/route.js",
+  "/api/github/auth/route": "app/api/github/auth/route.js",
+  "/api/repositories/route": "app/api/repositories/route.js",
+  "/auth/signin/page": "app/auth/signin/page.js",
+  "/dashboard/issues/[id]/page": "app/dashboard/issues/[id]/page.js",
+  "/dashboard/issues/page": "app/dashboard/issues/page.js",
+  "/dashboard/analytics/page": "app/dashboard/analytics/page.js",
+  "/dashboard/team/page": "app/dashboard/team/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/settings/page": "app/dashboard/settings/page.js",
+  "/dashboard/pull-requests/page": "app/dashboard/pull-requests/page.js",
   "/page": "app/page.js"
 }
