@@ -1,0 +1,17 @@
+{
+  "/api/ai/suggestions/route": "/api/ai/suggestions",
+  "/_not-found/page": "/_not-found",
+  "/api/auth/github/callback/route": "/api/auth/github/callback",
+  "/api/github/auth/route": "/api/github/auth",
+  "/api/pull-requests/route": "/api/pull-requests",
+  "/api/repositories/route": "/api/repositories",
+  "/auth/signin/page": "/auth/signin",
+  "/dashboard/analytics/page": "/dashboard/analytics",
+  "/dashboard/issues/[id]/page": "/dashboard/issues/[id]",
+  "/dashboard/settings/page": "/dashboard/settings",
+  "/dashboard/page": "/dashboard",
+  "/dashboard/issues/page": "/dashboard/issues",
+  "/dashboard/team/page": "/dashboard/team",
+  "/page": "/",
+  "/dashboard/pull-requests/page": "/dashboard/pull-requests"
+}
