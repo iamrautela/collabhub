@@ -1,4 +1,4 @@
-# Collabify
+# CollabHub
 # GitHub AI SaaS Platform
 
 A modern AI-powered SaaS platform that enhances your GitHub workflow with intelligent insights, Q&A capabilities, and seamless collaboration.  
@@ -94,10 +94,10 @@ Built with **Next.js 15**, **Google Gemini AI**, and **NeonDB**, this project of
 
 ```bash
 # Clone the repository
-git clone https://github.com/iamrautela/collabify.git
+git clone https://github.com/iamrautela/collabhub.git
 
 # Navigate into the project directory
-cd collabify
+cd collabhub
 
 # Install dependencies
 npm install
